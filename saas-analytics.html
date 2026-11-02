@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pulseboard – Enterprise SaaS Analytics Platform (UI/UX Case Study)</title>
+<style>
+:root{--bg:#f4f5f8;--surface:#fff;--ink:#161b26;--mute:#667085;--line:#e1e4ea;--accent:#3a4fd7;--accent-ink:#fff;--c2:#e8833a;--good:#157f4b;--bad:#c0392b;--soft:#e9ecfb;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1118;--surface:#171c27;--ink:#e9edf4;--mute:#97a1b3;--line:#283042;--accent:#8c9bff;--accent-ink:#0e1118;--c2:#f4a261;--good:#4ade80;--bad:#f87171;--soft:#222a45}}
+:root[data-theme="dark"]{--bg:#0e1118;--surface:#171c27;--ink:#e9edf4;--mute:#97a1b3;--line:#283042;--accent:#8c9bff;--accent-ink:#0e1118;--c2:#f4a261;--good:#4ade80;--bad:#f87171;--soft:#222a45}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;margin:0;line-height:1.2}
+.wrap{max-width:1100px;margin:0 auto;padding:16px 14px 48px}
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.top h1{font-size:clamp(26px,5vw,36px)}
+button,select{font:inherit;color:var(--ink)}
+.pill,select{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;cursor:pointer}
+.pill[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.bar label{font-size:13px;color:var(--mute);display:flex;flex-direction:column;gap:3px}
+.seg{display:flex;gap:6px}
+.sub{color:var(--mute);margin:4px 0 0;max-width:62ch}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
+.w{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.w.full{grid-column:1/-1}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+.w h3{font-size:17px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.kpi{background:var(--soft);border-radius:10px;padding:10px 12px}
+.kpi .v{font-size:24px;font-weight:700}.kpi .l{color:var(--mute);font-size:13px}
+.up{color:var(--good)}.down{color:var(--bad)}
+svg{width:100%;height:auto;display:block}
+svg text{fill:var(--mute);font-size:11px}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--mute);font-weight:600}
+.note{font-size:13px;color:var(--mute)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+.panel li{display:flex;align-items:center;gap:8px;padding:5px 0;list-style:none}
+.panel ul{margin:0;padding:0}.panel li span{flex:1}
+.mini{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:2px 9px;cursor:pointer}
+.hidden{display:none}
+.case section{margin-bottom:20px}.case h2{font-size:23px;margin-bottom:8px}
+.case ul{padding-left:20px;margin:6px 0}.case li{margin:4px 0}
+.cols{display:grid;gap:12px}@media(min-width:760px){.cols{grid-template-columns:repeat(3,1fr)}}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top">
+<div><h1>Pulseboard</h1><p class="sub">One analytics dashboard for many companies. Each role sees the tools they need and nothing more.</p></div>
+<div class="seg"><button class="pill" aria-pressed="true" data-tab="app">Prototype</button><button class="pill" aria-pressed="false" data-tab="case">Case study</button></div>
+</div>
+
+<div id="app">
+<div class="bar">
+<label>Company<select id="tenant"></select></label>
+<label>Your role<select id="role"><option>Admin</option><option>Manager</option><option>Analyst</option></select></label>
+<label>Period<div class="seg" id="range"></div></label>
+<div class="seg" style="margin-left:auto;align-self:flex-end"><button class="pill" id="cust" aria-pressed="false">Customize</button><button class="pill" id="exp">Export CSV</button></div>
+</div>
+<p class="note" id="rolenote"></p>
+<div class="panel hidden" id="panel"><h3 style="margin-bottom:6px">Customize your dashboard</h3><p class="note">Show, hide, or reorder widgets. Your layout is saved for this role.</p><ul id="wlist"></ul></div>
+<div class="grid" id="grid"></div>
+</div>
+
+<div id="case" class="case hidden w">
+<section><h2>The problem</h2><p>Businesses that use a SaaS analytics product have teams with very different needs. A finance admin, a team manager, and a data analyst all open the same dashboard, and most of it is noise for each of them. Charts are dense, and people can’t tell what changed or what to do next.</p></section>
+<section><h2>Industry focus: B2B SaaS</h2><p>Key challenges from the brief: complex data visualization, role-based dashboards (Admin, Manager, Analyst), and customizable widgets. The design handles each one directly.</p></section>
+<section><h2>Users</h2><div class="cols">
+<div><b>Meera, Admin</b><ul><li>Manages the company account</li><li>Needs the whole picture and user access control</li></ul></div>
+<div><b>Karthik, Manager</b><ul><li>Tracks team revenue and orders</li><li>Needs a quick read of what moved this month</li></ul></div>
+<div><b>Divya, Analyst</b><ul><li>Digs into regions and accounts</li><li>Needs clean charts and CSV export</li></ul></div></div></section>
+<section><h2>Design decisions</h2><ul>
+<li><b>Multi-tenant switcher:</b> one control at the top switches the whole dashboard between companies, so there is no confusion about whose data this is.</li>
+<li><b>Role-based views:</b> the role decides which widgets appear. Admins also get user management. Analysts get export. Each role sees a short note explaining what they can do.</li>
+<li><b>Summary first:</b> four KPI cards with change versus the previous period come before any chart.</li>
+<li><b>Simple charts:</b> one line chart for the trend, one bar chart for volume, one ranked bar list for regions. Every chart has labeled axes, no 3D, and no decoration.</li>
+<li><b>Customizable widgets:</b> show, hide, and reorder, saved per role.</li>
+<li><b>Responsive and accessible:</b> two columns on desktop, one on mobile, tables scroll sideways, focus outlines, light and dark theme.</li></ul></section>
+<section><h2>Process</h2><p>Research on tools like Mixpanel, Metabase and Power BI, personas, role and permission map, wireframes, high-fidelity screens, then this clickable prototype. Data in the prototype is sample data.</p></section>
+<section><h2>What I learned</h2><p>Role-based design is mostly about removing things. Once each role saw only what it needed, the dashboard felt simpler without losing any power.</p></section>
+</div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const TEN={"Northwind Retail":{b:42e5,o:3200,s:1,reg:[["South",38],["West",27],["North",21],["East",14]]},"Helio Health":{b:28e5,o:1900,s:2,reg:[["North",34],["South",30],["East",22],["West",14]]},"Orbit Logistics":{b:65e5,o:5400,s:3,reg:[["West",36],["South",29],["East",20],["North",15]]}};
+const MONTHS=["Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct"];
+const ACC=["Aster Foods","Bluewave","Cedar & Co","Delta Mart","Evergreen","Fable Labs","Granite","Harbor Inc"];
+const WID={kpi:"Key numbers",rev:"Revenue trend",ops:"Orders per month",reg:"Revenue by region",acc:"Top accounts",usr:"Team access"};
+const PERM={Admin:["kpi","rev","ops","reg","acc","usr"],Manager:["kpi","rev","ops","acc"],Analyst:["kpi","rev","reg","acc"]};
+const NOTE={Admin:"Admin: full dashboard plus team access and export.",Manager:"Manager: team performance and accounts. Region view and team access are hidden.",Analyst:"Analyst: trends, regions and accounts with export. Team access is hidden."};
+const st={tenant:Object.keys(TEN)[0],role:"Admin",range:12,cust:false,layout:{}};
+function data(){const t=TEN[st.tenant];const rev=[],ord=[];for(let i=0;i<12;i++){const w=1+.045*i+.14*Math.sin(i*.9+t.s);rev.push(Math.round(t.b*w));ord.push(Math.round(t.o*(1+.03*i+.1*Math.cos(i*.8+t.s))))}return{rev:rev.slice(-st.range),ord:ord.slice(-st.range),m:MONTHS.slice(-st.range)}}
+const f=n=>new Intl.NumberFormat("en-IN",{notation:"compact",maximumFractionDigits:1}).format(n);
+function line(v,m){const W=560,H=200,p=34,mx=Math.max(...v)*1.1,mn=Math.min(...v)*.85;const x=i=>p+i*(W-p-8)/(v.length-1||1),y=a=>H-24-(a-mn)/(mx-mn)*(H-44);
+let g="";for(let i=0;i<4;i++){const a=mn+(mx-mn)*i/3;g+=`<line x1="${p}" x2="${W}" y1="${y(a)}" y2="${y(a)}" stroke="var(--line)"/><text x="0" y="${y(a)+4}">₹${f(a)}</text>`}
+const pts=v.map((a,i)=>x(i)+","+y(a)).join(" ");const lab=m.map((a,i)=>(v.length<=6||i%2==0)?`<text x="${x(i)}" y="${H-6}" text-anchor="middle">${a}</text>`:"").join("");
+return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Revenue trend line chart">${g}<polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round"/>${v.map((a,i)=>`<circle cx="${x(i)}" cy="${y(a)}" r="3.5" fill="var(--accent)"><title>${m[i]}: ₹${f(a)}</title></circle>`).join("")}${lab}</svg>`}
+function bars(v,m){const W=560,H=200,p=34,mx=Math.max(...v)*1.1,bw=(W-p)/v.length;const y=a=>H-24-a/mx*(H-44);
+let g="";for(let i=0;i<4;i++){const a=mx*i/3;g+=`<line x1="${p}" x2="${W}" y1="${y(a)}" y2="${y(a)}" stroke="var(--line)"/><text x="0" y="${y(a)+4}">${f(a)}</text>`}
+return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Orders per month bar chart">${g}${v.map((a,i)=>`<rect x="${p+i*bw+bw*.15}" y="${y(a)}" width="${bw*.7}" height="${H-24-y(a)}" rx="3" fill="var(--c2)"><title>${m[i]}: ${a} orders</title></rect>${(v.length<=6||i%2==0)?`<text x="${p+i*bw+bw/2}" y="${H-6}" text-anchor="middle">${m[i]}</text>`:""}`).join("")}</svg>`}
+function delta(a,b){const d=(a-b)/b*100;return`<span class="${d>=0?"up":"down"}">${d>=0?"▲":"▼"} ${Math.abs(d).toFixed(1)}%</span>`}
+function widget(id,d){const t=TEN[st.tenant],n=d.rev.length,half=Math.min(6,Math.floor(n/2)||1);
+if(id==="kpi"){const cur=d.rev.slice(-1)[0],prev=d.rev.slice(-2)[0],oc=d.ord.slice(-1)[0],op=d.ord.slice(-2)[0],tot=d.rev.reduce((a,b)=>a+b,0);
+return`<div class="w full"><h3>Key numbers <span class="note">this month vs last</span></h3><div class="kpis"><div class="kpi"><div class="v">₹${f(cur)}</div><div class="l">Revenue ${delta(cur,prev)}</div></div><div class="kpi"><div class="v">${oc}</div><div class="l">Orders ${delta(oc,op)}</div></div><div class="kpi"><div class="v">₹${Math.round(cur/oc)}</div><div class="l">Average order ${delta(cur/oc,prev/op)}</div></div><div class="kpi"><div class="v">₹${f(tot)}</div><div class="l">Total, last ${n} months</div></div></div></div>`}
+if(id==="rev")return`<div class="w"><h3>Revenue trend</h3>${line(d.rev,d.m)}</div>`;
+if(id==="ops")return`<div class="w"><h3>Orders per month</h3>${bars(d.ord,d.m)}</div>`;
+if(id==="reg")return`<div class="w"><h3>Revenue by region</h3>${t.reg.map(r=>`<div style="margin:8px 0"><div style="display:flex;justify-content:space-between;font-size:14px"><span>${r[0]}</span><b>${r[1]}%</b></div><div style="background:var(--soft);border-radius:6px;height:10px"><div style="width:${r[1]*2}%;background:var(--accent);height:10px;border-radius:6px"></div></div></div>`).join("")}</div>`;
+if(id==="acc"){const cur=d.rev.slice(-1)[0];return`<div class="w"><h3>Top accounts</h3><div class="scroll"><table><tr><th>Account</th><th>Revenue</th><th>Change</th></tr>${ACC.slice(0,5).map((a,i)=>{const v=Math.round(cur*(.2-i*.03));const c=((i*7+t.s*3)%13)-4;return`<tr><td>${a}</td><td>₹${f(v)}</td><td class="${c>=0?"up":"down"}">${c>=0?"▲":"▼"} ${Math.abs(c)}%</td></tr>`}).join("")}</table></div></div>`}
+if(id==="usr")return`<div class="w"><h3>Team access</h3><div class="scroll"><table><tr><th>Name</th><th>Role</th></tr><tr><td>Meera Rao</td><td>Admin</td></tr><tr><td>Karthik S</td><td>Manager</td></tr><tr><td>Divya N</td><td>Analyst</td></tr></table></div><p class="note">Only admins can change roles.</p></div>`}
+function order(){const a=PERM[st.role];const l=st.layout[st.role]||(st.layout[st.role]=a.map(k=>({k,on:true})));return l}
+function render(){
+$("#rolenote").textContent=NOTE[st.role];
+const d=data(),L=order();
+$("#grid").innerHTML=L.filter(x=>x.on).map(x=>widget(x.k,d)).join("");
+$("#wlist").innerHTML=L.map((x,i)=>`<li><input type="checkbox" id="c${i}" ${x.on?"checked":""} data-i="${i}"><span><label for="c${i}">${WID[x.k]}</label></span><button class="mini" data-up="${i}" aria-label="Move up">↑</button><button class="mini" data-dn="${i}" aria-label="Move down">↓</button></li>`).join("");
+$("#panel").classList.toggle("hidden",!st.cust);$("#cust").setAttribute("aria-pressed",st.cust);
+$("#exp").classList.toggle("hidden",st.role==="Manager");
+$("#range").innerHTML="";[6,12].forEach(r=>{const b=document.createElement("button");b.className="pill";b.textContent=r+" months";b.setAttribute("aria-pressed",st.range===r);b.onclick=()=>{st.range=r;render()};$("#range").appendChild(b)})}
+$("#tenant").innerHTML=Object.keys(TEN).map(k=>`<option>${k}</option>`).join("");
+$("#tenant").onchange=e=>{st.tenant=e.target.value;render();toast("Switched to "+st.tenant)};
+$("#role").onchange=e=>{st.role=e.target.value;render();toast("Viewing as "+st.role)};
+$("#cust").onclick=()=>{st.cust=!st.cust;render()};
+$("#wlist").onclick=e=>{const L=order(),t=e.target;if(t.dataset.up!==undefined){const i=+t.dataset.up;if(i>0){[L[i-1],L[i]]=[L[i],L[i-1]];render()}}if(t.dataset.dn!==undefined){const i=+t.dataset.dn;if(i<L.length-1){[L[i+1],L[i]]=[L[i],L[i+1]];render()}}};
+$("#wlist").onchange=e=>{if(e.target.dataset.i!==undefined){order()[+e.target.dataset.i].on=e.target.checked;render()}};
+$("#exp").onclick=()=>{const d=data();const csv="Month,Revenue,Orders\n"+d.m.map((m,i)=>`${m},${d.rev[i]},${d.ord[i]}`).join("\n");const a=document.createElement("a");a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(csv);a.download="pulseboard-export.csv";a.click();toast("Export started")};
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1600)}
+document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-tab]").forEach(x=>x.setAttribute("aria-pressed",x===b));$("#app").classList.toggle("hidden",b.dataset.tab!=="app");$("#case").classList.toggle("hidden",b.dataset.tab!=="case")});
+render();
+</script>
+</body>
+</html>
