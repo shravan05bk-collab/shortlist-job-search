@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shortlist – AI-Powered Job Search Platform (UI/UX Case Study)</title>
+<style>
+:root{--bg:#f3f5f7;--surface:#fff;--ink:#1b2430;--mute:#5d6b7a;--line:#dde3ea;--accent:#0f766e;--accent-ink:#fff;--hot:#b45309;--hot-bg:#fef3c7;--chip:#e6f2f0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f151c;--surface:#18212b;--ink:#e8edf2;--mute:#9aa8b6;--line:#2a3643;--accent:#2dd4bf;--accent-ink:#0b1b19;--hot:#fcd34d;--hot-bg:#3a2e0a;--chip:#173431}}
+:root[data-theme="dark"]{--bg:#0f151c;--surface:#18212b;--ink:#e8edf2;--mute:#9aa8b6;--line:#2a3643;--accent:#2dd4bf;--accent-ink:#0b1b19;--hot:#fcd34d;--hot-bg:#3a2e0a;--chip:#173431}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.2;margin:0}
+.wrap{max-width:980px;margin:0 auto;padding:20px 16px 48px}
+header h1{font-size:clamp(28px,6vw,44px);margin-bottom:6px}
+header p{color:var(--mute);margin:0 0 16px;max-width:60ch}
+nav{display:flex;gap:8px;margin-bottom:16px}
+nav button,.btn,.chip,.seg button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px}
+nav button[aria-pressed=true],.chip[aria-pressed=true],.seg button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.grid{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:800px){.grid{grid-template-columns:300px 1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.panel h3{font-size:18px;margin-bottom:10px}
+label{display:block;font-size:14px;color:var(--mute);margin:12px 0 6px}
+input[type=search],select{width:100%;font:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{padding:5px 11px;font-size:14px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}.seg button{padding:6px 12px;font-size:14px}
+.job{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:start;padding:14px 0;border-top:1px solid var(--line);cursor:pointer}
+.job:first-child{border-top:0}
+.ring{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--line) 0)}
+.ring span{width:50px;height:50px;border-radius:50%;background:var(--surface);display:grid;place-items:center}
+.job h4{margin:0;font-size:17px}.meta{color:var(--mute);font-size:14px}
+.why{display:inline-block;margin-top:6px;background:var(--hot-bg);color:var(--hot);border-radius:8px;padding:2px 8px;font-size:13px}
+.tags{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}.tag{background:var(--chip);border-radius:6px;padding:1px 8px;font-size:13px}
+.tag.on{background:var(--accent);color:var(--accent-ink)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.detail{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.detail.open{display:flex}
+.sheet{background:var(--surface);width:100%;max-width:560px;max-height:90%;overflow:auto;border-radius:18px 18px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px))}
+@media(min-width:800px){.detail{align-items:center}.sheet{border-radius:18px}}
+.row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:30}
+.toast.show{opacity:1}
+.empty{color:var(--mute);padding:20px 0}
+.case section{margin-bottom:20px}.case h2{font-size:24px;margin-bottom:8px}
+.case ul,.case ol{padding-left:20px;margin:6px 0}.case li{margin:4px 0}
+.cols{display:grid;gap:12px}@media(min-width:700px){.cols{grid-template-columns:1fr 1fr}}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.flow span{background:var(--chip);padding:6px 10px;border-radius:8px;font-size:14px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Shortlist</h1>
+<p>A job portal that suggests roles based on your profile and tells you why each one fits. UI/UX internship project: AI-Powered Job Search Platform.</p>
+<nav role="tablist">
+<button aria-pressed="true" data-tab="proto">Prototype</button>
+<button aria-pressed="false" data-tab="case">Case study</button>
+</nav>
+</header>
+
+<div id="proto" class="grid">
+<aside class="panel">
+<h3>Your profile</h3>
+<label>Your skills (tap to toggle)</label>
+<div class="chips" id="skills"></div>
+<label for="q">Search</label>
+<input type="search" id="q" placeholder="Role or company">
+<label for="loc">Location</label>
+<select id="loc"><option value="">Anywhere</option><option>Bengaluru</option><option>Mysuru</option><option>Hyderabad</option><option>Remote</option></select>
+<label>Job type</label>
+<div class="seg" id="type"></div>
+<label>Experience</label>
+<div class="seg" id="exp"></div>
+<div class="row"><button class="btn" id="reset">Clear filters</button></div>
+</aside>
+<main class="panel">
+<div class="row" style="margin-top:0;justify-content:space-between;align-items:center">
+<h3 id="title" style="margin:0">Recommended for you</h3>
+<div class="seg" id="view"></div>
+</div>
+<div id="list"></div>
+</main>
+</div>
+
+<div id="case" class="case hidden panel">
+<section><h2>The problem</h2><p>Job portals show thousands of results and leave the filtering to the user. Freshers especially can’t tell which roles they actually qualify for, so they apply blindly or give up.</p></section>
+<section><h2>Goal</h2><p>Make the first screen useful: show roles ranked by fit, explain each match in plain words, and keep search filters one tap away.</p></section>
+<section><h2>Users</h2>
+<div class="cols">
+<div><b>Ananya, 20, final-year student.</b><ul><li>Wants a first internship or job</li><li>Unsure which skills employers value</li><li>Needs: clear match reasons, entry-level filter</li></ul></div>
+<div><b>Rohit, 27, working professional.</b><ul><li>Wants a better role, little time</li><li>Searches on his phone after work</li><li>Needs: fast filters, saved jobs, remote option</li></ul></div>
+</div></section>
+<section><h2>User flow</h2><div class="flow"><span>Sign up</span>›<span>Pick skills</span>›<span>See ranked matches</span>›<span>Search and filter</span>›<span>Job details</span>›<span>Save or apply</span>›<span>Track applications</span></div></section>
+<section><h2>Key design decisions</h2><ul>
+<li><b>Match ring:</b> a percentage ring on every job so fit is readable at a glance.</li>
+<li><b>“Why this match” line:</b> names the skills you share, so the suggestion isn’t a black box.</li>
+<li><b>Filters in the sidebar on desktop, stacked on mobile:</b> the same controls at every screen size.</li>
+<li><b>Skill chips instead of a long form:</b> setting up a profile takes seconds and updates results live.</li>
+<li><b>Accessibility:</b> visible focus states, high-contrast text, 44px-friendly tap targets, light and dark themes.</li>
+</ul></section>
+<section><h2>Tools and process</h2><p>Research on existing portals, personas, user flow, low-fidelity wireframes, high-fidelity screens, then a clickable prototype (this page). Match scores in the prototype are calculated from skill overlap to show how AI recommendations would behave.</p></section>
+<section><h2>What I learned</h2><p>Explaining a recommendation matters as much as making it. Users trusted ranked results more once each one told them why it was suggested.</p></section>
+</div>
+</div>
+
+<div class="detail" id="detail"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const JOBS=[
+{id:1,t:"UI/UX Design Intern",c:"Pixelcraft Studio",l:"Bengaluru",type:"Internship",exp:"Fresher",s:["Figma","Wireframing","Prototyping","User research"],pay:"₹15,000/month",d:"Design screens for a fintech app with a senior designer. You’ll run small usability tests and ship your work to real users."},
+{id:2,t:"Junior Product Designer",c:"Nimbus Labs",l:"Remote",type:"Full-time",exp:"0–2 yrs",s:["Figma","Prototyping","Design systems","HTML/CSS"],pay:"₹4.5–6 LPA",d:"Own the design of onboarding flows and help grow our component library."},
+{id:3,t:"Frontend Developer",c:"Kaveri Tech",l:"Mysuru",type:"Full-time",exp:"0–2 yrs",s:["HTML/CSS","JavaScript","React","Figma"],pay:"₹5–7 LPA",d:"Turn designs into responsive, accessible interfaces for a logistics dashboard."},
+{id:4,t:"UX Researcher",c:"Insightly",l:"Hyderabad",type:"Full-time",exp:"2–5 yrs",s:["User research","Wireframing","Data analysis"],pay:"₹9–12 LPA",d:"Plan and run interviews and surveys, then turn findings into clear product recommendations."},
+{id:5,t:"Visual Design Intern",c:"Brightleaf Media",l:"Remote",type:"Internship",exp:"Fresher",s:["Figma","Illustration","Branding"],pay:"₹10,000/month",d:"Create social and web graphics for consumer brands. Portfolio review in the first round."},
+{id:6,t:"Web Designer",c:"Orbit Agency",l:"Bengaluru",type:"Contract",exp:"0–2 yrs",s:["HTML/CSS","Figma","Branding","Prototyping"],pay:"₹40,000/month",d:"Design and build marketing sites for clients over a 6-month contract."},
+{id:7,t:"Senior UX Designer",c:"Fintrail",l:"Bengaluru",type:"Full-time",exp:"5+ yrs",s:["Design systems","User research","Prototyping","Figma"],pay:"₹22–28 LPA",d:"Lead design for our payments product and mentor a team of three designers."},
+{id:8,t:"Interaction Design Intern",c:"Zenfield",l:"Remote",type:"Internship",exp:"Fresher",s:["Prototyping","Figma","JavaScript","Wireframing"],pay:"₹12,000/month",d:"Build interactive prototypes and test them with early users."}
+];
+const SK=["Figma","Wireframing","Prototyping","User research","HTML/CSS","JavaScript","React","Design systems","Branding","Illustration","Data analysis"];
+const TYPES=["All","Internship","Full-time","Contract"],EXPS=["Any","Fresher","0–2 yrs","2–5 yrs","5+ yrs"];
+const st={skills:new Set(["Figma","Wireframing","Prototyping"]),type:"All",exp:"Any",view:"All",saved:new Set(),applied:new Set()};
+const $=s=>document.querySelector(s);
+function seg(el,opts,key){el.innerHTML="";opts.forEach(o=>{const b=document.createElement("button");b.textContent=o;b.setAttribute("aria-pressed",st[key]===o);b.onclick=()=>{st[key]=o;render()};el.appendChild(b)})}
+function score(j){const m=j.s.filter(x=>st.skills.has(x));return{p:st.skills.size?Math.round(m.length/j.s.length*100):0,m}}
+function render(){
+$("#skills").innerHTML="";SK.forEach(k=>{const b=document.createElement("button");b.className="chip";b.textContent=k;b.setAttribute("aria-pressed",st.skills.has(k));b.onclick=()=>{st.skills.has(k)?st.skills.delete(k):st.skills.add(k);render()};$("#skills").appendChild(b)});
+seg($("#type"),TYPES,"type");seg($("#exp"),EXPS,"exp");
+const v=$("#view");v.innerHTML="";["All","Saved ("+st.saved.size+")"].forEach((o,i)=>{const b=document.createElement("button");const key=i?"Saved":"All";b.textContent=o;b.setAttribute("aria-pressed",st.view===key);b.onclick=()=>{st.view=key;render()};v.appendChild(b)});
+$("#title").textContent=st.view==="Saved"?"Saved jobs":"Recommended for you";
+const q=$("#q").value.toLowerCase(),loc=$("#loc").value;
+let r=JOBS.map(j=>({j,...score(j)})).filter(x=>(!q||(x.j.t+x.j.c).toLowerCase().includes(q))&&(!loc||x.j.l===loc)&&(st.type==="All"||x.j.type===st.type)&&(st.exp==="Any"||x.j.exp===st.exp)&&(st.view==="All"||st.saved.has(x.j.id))).sort((a,b)=>b.p-a.p);
+const L=$("#list");L.innerHTML=r.length?"":'<p class="empty">'+(st.view==="Saved"?"Nothing saved yet. Tap a job and choose Save.":"No jobs match these filters. Clear a filter or add more skills.")+"</p>";
+r.forEach(x=>{const d=document.createElement("div");d.className="job";d.tabIndex=0;
+d.innerHTML=`<div class="ring" style="--p:${x.p}"><span>${x.p}%</span></div><div><h4>${x.j.t}</h4><div class="meta">${x.j.c} · ${x.j.l} · ${x.j.type}</div>${x.m.length?`<div class="why">Matches your ${x.m.slice(0,2).join(" and ")}</div>`:""}<div class="tags">${x.j.s.map(s=>`<span class="tag ${st.skills.has(s)?"on":""}">${s}</span>`).join("")}</div></div>`;
+d.onclick=()=>open(x.j,x.p);d.onkeydown=e=>{if(e.key==="Enter")open(x.j,x.p)};L.appendChild(d)})}
+function open(j,p){const s=$("#sheet");const sv=st.saved.has(j.id),ap=st.applied.has(j.id);
+s.innerHTML=`<h3>${j.t}</h3><p class="meta">${j.c} · ${j.l} · ${j.type} · ${j.exp}</p><p><b>${p}% match.</b> ${j.pay}</p><p>${j.d}</p><div class="tags">${j.s.map(x=>`<span class="tag ${st.skills.has(x)?"on":""}">${x}</span>`).join("")}</div><div class="row"><button class="btn primary" id="ap" ${ap?"disabled":""}>${ap?"Applied":"Apply now"}</button><button class="btn" id="sv">${sv?"Remove from saved":"Save job"}</button><button class="btn" id="cl">Close</button></div>`;
+$("#detail").classList.add("open");
+$("#ap").onclick=()=>{st.applied.add(j.id);toast("Application sent to "+j.c);close();render()};
+$("#sv").onclick=()=>{sv?st.saved.delete(j.id):st.saved.add(j.id);toast(sv?"Removed from saved":"Job saved");close();render()};
+$("#cl").onclick=close;$("#cl").focus()}
+function close(){$("#detail").classList.remove("open")}
+$("#detail").onclick=e=>{if(e.target.id==="detail")close()};document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800)}
+$("#q").oninput=render;$("#loc").onchange=render;
+$("#reset").onclick=()=>{$("#q").value="";$("#loc").value="";st.type="All";st.exp="Any";render()};
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-pressed",x===b));$("#proto").classList.toggle("hidden",b.dataset.tab!=="proto");$("#case").classList.toggle("hidden",b.dataset.tab!=="case")});
+render();
+</script>
+</body>
+</html>
