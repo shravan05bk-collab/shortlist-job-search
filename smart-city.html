@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CityPulse – AI-Driven Smart City Operations Dashboard (UI/UX Case Study)</title>
+<style>
+:root{--bg:#eef2f4;--surface:#fff;--ink:#12212b;--mute:#5b6b76;--line:#d9e1e6;--accent:#0b7285;--accent-ink:#fff;--ok:#2b8a3e;--mid:#e8a317;--bad:#d6402f;--soft:#e3f1f4;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d161c;--surface:#16222b;--ink:#e7eef2;--mute:#92a4af;--line:#263744;--accent:#3bc9db;--accent-ink:#06222a;--ok:#69db7c;--mid:#ffd43b;--bad:#ff8787;--soft:#17353d}}
+:root[data-theme="dark"]{--bg:#0d161c;--surface:#16222b;--ink:#e7eef2;--mute:#92a4af;--line:#263744;--accent:#3bc9db;--accent-ink:#06222a;--ok:#69db7c;--mid:#ffd43b;--bad:#ff8787;--soft:#17353d}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;margin:0;line-height:1.2}
+.wrap{max-width:1100px;margin:0 auto;padding:16px 14px 48px}
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.top h1{font-size:clamp(26px,5vw,36px)}.sub{color:var(--mute);margin:4px 0 0;max-width:62ch}
+button,select{font:inherit;color:var(--ink)}
+.pill,select{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;cursor:pointer}
+.pill[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:10px}
+.bar label{font-size:13px;color:var(--mute);display:flex;flex-direction:column;gap:3px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--mute)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--ok)}.dot.off{background:var(--mute)}
+.note{font-size:13px;color:var(--mute)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.kpi .v{font-size:24px;font-weight:700}.kpi .l{color:var(--mute);font-size:13px}
+.grid{display:grid;gap:12px;grid-template-columns:1.1fr 1fr}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.w{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.w h3{font-size:17px;margin-bottom:8px}
+svg{width:100%;height:auto;display:block}svg text{fill:var(--mute);font-size:11px}
+.zone{cursor:pointer}.zone:focus-visible rect{stroke:var(--ink);stroke-width:3}
+.legend{display:flex;gap:12px;font-size:13px;color:var(--mute);margin-top:6px;flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.al{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.al:first-of-type{border-top:0}.al span{flex:1}
+.sev{font-weight:700;font-size:12px;padding:2px 8px;border-radius:6px;color:#fff}
+.mini{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:3px 10px;cursor:pointer}
+.svc{display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid var(--line)}
+.svc:first-of-type{border-top:0}
+.full{grid-column:1/-1}
+.hidden{display:none}
+.case section{margin-bottom:20px}.case h2{font-size:23px;margin-bottom:8px}
+.case ul{padding-left:20px;margin:6px 0}.case li{margin:4px 0}
+.cols{display:grid;gap:12px}@media(min-width:760px){.cols{grid-template-columns:repeat(3,1fr)}}
+@media(prefers-reduced-motion:no-preference){.dot:not(.off){animation:p 1.6s infinite}@keyframes p{50%{opacity:.35}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top">
+<div><h1>CityPulse</h1><p class="sub">One screen for traffic, air quality, energy and public services. Live data, a short-term forecast, and alerts that say what to do.</p></div>
+<div class="seg"><button class="pill" aria-pressed="true" data-tab="app">Prototype</button><button class="pill" aria-pressed="false" data-tab="case">Case study</button></div>
+</div>
+
+<div id="app">
+<div class="bar">
+<label>Your role<select id="role"><option>City Admin</option><option>Traffic Control</option><option>Environment Analyst</option></select></label>
+<label>Map layer<div class="seg" id="layers"></div></label>
+<button class="pill" id="liveBtn" aria-pressed="true">Pause live data</button>
+<span class="live"><span class="dot" id="dot"></span><span id="stamp">Live</span></span>
+</div>
+<p class="note" id="rolenote"></p>
+<div class="kpis" id="kpis"></div>
+<div class="grid">
+<div class="w"><h3>City map</h3><div id="map"></div><div class="legend"><span><i style="background:var(--ok)"></i>Normal (under 50)</span><span><i style="background:var(--mid)"></i>Watch (50–74)</span><span><i style="background:var(--bad)"></i>Critical (75+)</span></div><p class="note" id="zinfo">Select a zone to see its details.</p></div>
+<div class="w"><h3 id="ctitle">Trend and forecast</h3><div id="chart"></div><p class="note">Solid line: last 30 readings. Dashed line and shaded band: forecast for the next 10 readings and its likely range.</p></div>
+<div class="w"><h3>Alerts</h3><div id="alerts"></div></div>
+<div class="w" id="svcw"><h3>Public services</h3><div id="svcs"></div></div>
+</div>
+</div>
+
+<div id="case" class="case hidden w">
+<section><h2>The problem</h2><p>City control rooms watch many systems at once: traffic cameras, air sensors, power grids, water and waste services. Data streams in constantly, but operators have to jump between tools, and a warning is easy to miss.</p></section>
+<section><h2>Goal</h2><p>Design one centralized dashboard that shows what is happening now, what is likely to happen next, and what needs attention first, for the right person.</p></section>
+<section><h2>Users</h2><div class="cols">
+<div><b>Anil, City Admin</b><ul><li>Oversees all departments</li><li>Needs the big picture and service health</li></ul></div>
+<div><b>Rekha, Traffic Control</b><ul><li>Manages signals and incidents</li><li>Needs congestion by zone and fast alerts</li></ul></div>
+<div><b>Farhan, Environment Analyst</b><ul><li>Tracks pollution and energy load</li><li>Needs trends and forecasts</li></ul></div></div></section>
+<section><h2>Advanced focus areas from the brief</h2><ul>
+<li><b>Real-time data streams:</b> values update every two seconds, with a live indicator and a pause button so an operator can stop the screen to read it.</li>
+<li><b>Predictive analytics UI:</b> the trend chart extends with a dashed forecast and a shaded range, so uncertainty is visible instead of hidden.</li>
+<li><b>Role-based dashboards:</b> each role gets the layers, KPIs and alerts for their job.</li></ul></section>
+<section><h2>Design decisions</h2><ul>
+<li><b>Map first:</b> six zones colored by status, with the number printed in each zone so color is never the only signal.</li>
+<li><b>Three status levels:</b> normal, watch, critical, with the same thresholds on every layer.</li>
+<li><b>Alerts that can be acted on:</b> each alert names the zone, the reading, and has an Acknowledge button.</li>
+<li><b>One layer at a time:</b> traffic, pollution and energy share the map instead of three crowded maps.</li>
+<li><b>Accessibility:</b> keyboard-selectable zones, visible focus, light and dark themes, reduced motion respected.</li></ul></section>
+<section><h2>Tech direction</h2><p>The brief lists Python, FastAPI, Kafka, WebSockets, React and map APIs. This prototype is the front-end design layer. In a full build, sensor data would stream through Kafka and FastAPI to the browser over WebSockets, and the forecast would come from a trained model. Here the stream and forecast are simulated.</p></section>
+<section><h2>What I learned</h2><p>In real-time interfaces, the hardest design choice is what not to show. Limiting each role to a few layers and five alerts kept the screen calm even while the data kept moving.</p></section>
+</div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const ZN=[["Central",20,20],["North Hub",210,20],["East Tech Park",400,20],["West Industrial",20,130],["South Market",210,130],["Lakeside",400,130]];
+const LAY={traffic:{n:"Traffic congestion",u:"%",k:"t"},pollution:{n:"Air pollution index",u:"",k:"p"},energy:{n:"Energy load",u:"%",k:"e"}};
+const ROLES={"City Admin":{l:["traffic","pollution","energy"],s:true,n:"City Admin: all layers, all alerts, and public services."},"Traffic Control":{l:["traffic"],s:false,n:"Traffic Control: congestion map and traffic alerts. Other layers and services are hidden."},"Environment Analyst":{l:["pollution","energy"],s:false,n:"Environment Analyst: pollution and energy layers with forecasts. Traffic and services are hidden."}};
+const SV=[["Metro and buses",98],["Water supply",99],["Waste collection",91],["Street lighting",96],["Emergency response",100]];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const st={role:"City Admin",layer:"traffic",sel:null,live:true,alerts:[],ack:new Set(),z:ZN.map((z,i)=>({n:z[0],x:z[1],y:z[2],t:40+i*6,p:35+i*7,e:45+i*5,b:[40+i*6,35+i*7,45+i*5]})),h:{t:[],p:[],e:[]}};
+const avg=k=>Math.round(st.z.reduce((a,z)=>a+z[k],0)/st.z.length);
+for(let i=0;i<30;i++){step();}
+function step(){st.z.forEach(z=>{["t","p","e"].forEach((k,j)=>{z[k]=clamp(Math.round(z[k]+(z.b[j]-z[k])*.1+(Math.random()*8-4)),5,98)})});["t","p","e"].forEach(k=>{st.h[k].push(avg(k));if(st.h[k].length>30)st.h[k].shift()});
+st.z.forEach(z=>["t","p","e"].forEach(k=>{if(z[k]>=80&&!st.alerts.some(a=>a.z===z.n&&a.k===k)&&Math.random()<.5)st.alerts.unshift({z:z.n,k,v:z[k],id:Date.now()+Math.random()})}));
+st.alerts=st.alerts.slice(0,8)}
+const col=v=>v>=75?"var(--bad)":v>=50?"var(--mid)":"var(--ok)";
+const lvl=v=>v>=75?"Critical":v>=50?"Watch":"Normal";
+function forecast(h){const n=8,s=h.slice(-n),m=(s[n-1]-s[0])/(n-1),out=[];for(let i=1;i<=10;i++)out.push({v:clamp(s[n-1]+m*i,0,100),r:2+i*.9});return out}
+function map(){const k=LAY[st.layer].k;return`<svg viewBox="0 0 590 240" role="img" aria-label="City map by zone">${st.z.map(z=>`<g class="zone" tabindex="0" role="button" aria-label="${z.n}, ${LAY[st.layer].n} ${z[k]}, ${lvl(z[k])}" data-n="${z.n}"><rect x="${z.x}" y="${z.y}" width="180" height="100" rx="10" fill="${col(z[k])}" opacity=".85" stroke="${st.sel===z.n?"var(--ink)":"none"}" stroke-width="3"/><text x="${z.x+12}" y="${z.y+24}" style="fill:#fff;font-size:13px;font-weight:600">${z.n}</text><text x="${z.x+12}" y="${z.y+66}" style="fill:#fff;font-size:30px;font-weight:700">${z[k]}</text><text x="${z.x+12}" y="${z.y+86}" style="fill:#fff;font-size:12px">${lvl(z[k])}</text></g>`).join("")}</svg>`}
+function chart(){const k=LAY[st.layer].k,h=st.h[k],f=forecast(h),W=560,H=210,p=30,N=h.length+f.length;const x=i=>p+i*(W-p-8)/(N-1),y=v=>H-24-v/100*(H-44);
+const line=h.map((v,i)=>x(i)+","+y(v)).join(" ");const fl=[h[h.length-1],...f.map(a=>a.v)].map((v,i)=>x(h.length-1+i)+","+y(v)).join(" ");
+const up=f.map((a,i)=>x(h.length+i)+","+y(clamp(a.v+a.r,0,100))),lo=f.map((a,i)=>x(h.length+i)+","+y(clamp(a.v-a.r,0,100))).reverse();
+const lastv=h[h.length-1],endv=Math.round(f[9].v);
+return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Trend and forecast chart">${[0,50,100].map(v=>`<line x1="${p}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="0" y="${y(v)+4}">${v}</text>`).join("")}<line x1="${x(h.length-1)}" x2="${x(h.length-1)}" y1="${y(100)}" y2="${y(0)}" stroke="var(--line)" stroke-dasharray="3 3"/><text x="${x(h.length-1)-26}" y="${H-6}">now</text><polygon points="${up.join(" ")} ${lo.join(" ")}" fill="var(--accent)" opacity=".18"/><polyline points="${line}" fill="none" stroke="var(--accent)" stroke-width="3"/><polyline points="${fl}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-dasharray="6 5"/></svg><p style="margin:6px 0 0"><b>City average now: ${lastv}.</b> Expected in about 20 seconds: ${endv} (${endv>lastv+2?"rising":endv<lastv-2?"falling":"steady"}).</p>`}
+function render(){const R=ROLES[st.role];if(!R.l.includes(st.layer))st.layer=R.l[0];
+$("#rolenote").textContent=R.n;
+$("#layers").innerHTML=R.l.map(l=>`<button class="pill" aria-pressed="${l===st.layer}" data-l="${l}">${LAY[l].n}</button>`).join("");
+$("#kpis").innerHTML=R.l.map(l=>{const v=avg(LAY[l].k);return`<div class="kpi"><div class="v" style="color:${col(v)}">${v}${LAY[l].u}</div><div class="l">${LAY[l].n} · ${lvl(v)}</div></div>`}).join("")+(R.s?`<div class="kpi"><div class="v">${Math.round(SV.reduce((a,s)=>a+s[1],0)/SV.length)}%</div><div class="l">Services running</div></div>`:"");
+$("#map").innerHTML=map();$("#ctitle").textContent=LAY[st.layer].n+": trend and forecast";$("#chart").innerHTML=chart();
+const al=st.alerts.filter(a=>R.l.some(l=>LAY[l].k===a.k)&&!st.ack.has(a.id)).slice(0,5);
+$("#alerts").innerHTML=al.length?al.map(a=>{const L=Object.values(LAY).find(l=>l.k===a.k);return`<div class="al"><b class="sev" style="background:${a.v>=90?"var(--bad)":"#b7791f"}">${a.v>=90?"Critical":"High"}</b><span>${a.z}: ${L.n.toLowerCase()} at ${a.v}${L.u}</span><button class="mini" data-a="${a.id}">Acknowledge</button></div>`}).join(""):'<p class="note">No active alerts. New alerts appear here when a zone reaches 80 or more.</p>';
+$("#svcw").classList.toggle("hidden",!R.s);$("#svcs").innerHTML=SV.map(s=>`<div class="svc"><span>${s[0]}</span><b style="color:${s[1]>=95?"var(--ok)":"var(--mid)"}">${s[1]}%</b></div>`).join("");
+if(st.sel){const z=st.z.find(a=>a.n===st.sel),k=LAY[st.layer].k;$("#zinfo").textContent=`${z.n}: ${LAY[st.layer].n} ${z[k]}${LAY[st.layer].u} (${lvl(z[k])}). Traffic ${z.t}%, pollution ${z.p}, energy ${z.e}%.`}}
+$("#role").onchange=e=>{st.role=e.target.value;render()};
+$("#layers").onclick=e=>{if(e.target.dataset.l){st.layer=e.target.dataset.l;render()}};
+$("#map").onclick=e=>{const g=e.target.closest(".zone");if(g){st.sel=g.dataset.n;render()}};
+$("#map").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){const g=e.target.closest(".zone");if(g){e.preventDefault();st.sel=g.dataset.n;render();const n=document.querySelector(`.zone[data-n="${st.sel}"]`);n&&n.focus()}}};
+$("#alerts").onclick=e=>{if(e.target.dataset.a){st.ack.add(+e.target.dataset.a);render()}};
+$("#liveBtn").onclick=()=>{st.live=!st.live;$("#liveBtn").setAttribute("aria-pressed",st.live);$("#liveBtn").textContent=st.live?"Pause live data":"Resume live data";$("#dot").classList.toggle("off",!st.live);$("#stamp").textContent=st.live?"Live":"Paused"};
+setInterval(()=>{if(!st.live||$("#app").classList.contains("hidden"))return;const f=document.activeElement;const keep=f&&f.classList&&f.classList.contains("zone")?f.dataset.n:null;step();render();if(keep){const n=document.querySelector(`.zone[data-n="${keep}"]`);n&&n.focus()}},2000);
+document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-tab]").forEach(x=>x.setAttribute("aria-pressed",x===b));$("#app").classList.toggle("hidden",b.dataset.tab!=="app");$("#case").classList.toggle("hidden",b.dataset.tab!=="case")});
+render();
+</script>
+</body>
+</html>
